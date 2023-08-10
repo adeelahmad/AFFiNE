@@ -4,6 +4,10 @@ const {
   DEPLOY_ENV,
   DEV_ENV_HOST,
   GIT_SHORT_HASH,
+  DATABASE_URL,
+  DATABASE_USERNAME,
+  DATABASE_PASSWORD,
+  DATABASE_NAME,
   R2_ACCOUNT_ID,
   R2_ACCESS_KEY_ID,
   R2_SECRET_ACCESS_KEY,
@@ -17,12 +21,28 @@ const {
 
 const createHelmCommand = ({ isDryRun }) => {
   const flag = isDryRun ? '--dry-run' : '--atomic';
+  const setDatabaseUrlCommand = DATABASE_URL
+    ? `--set-string global.database.url=${DATABASE_URL}`
+    : ``;
+  const setDatabaseUsernameCommand = DATABASE_USERNAME
+    ? `--set-string global.database.username=${DATABASE_USERNAME}`
+    : ``;
+  const setDatabasePasswordCommand = DATABASE_PASSWORD
+    ? `--set-string global.database.password=${DATABASE_PASSWORD}`
+    : ``;
+  const setDatabaseNameCommand = DATABASE_NAME
+    ? `--set-string global.database.name=${DATABASE_NAME}`
+    : ``;
   const deployCommand = [
     `helm upgrade --install affine .github/helm/affine`,
     `--namespace  ${DEPLOY_ENV}`,
     `--set        global.ingress.enabled=true`,
     `--set-json   global.ingress.annotations=\"{ \\"kubernetes.io/ingress.class\\": \\"gce\\", \\"kubernetes.io/ingress.allow-http\\": \\"true\\", \\"kubernetes.io/ingress.global-static-ip-name\\": \\"affine-cluster-dev\\" }\"`,
     `--set-string global.ingress.host="${DEV_ENV_HOST}"`,
+    setDatabaseUrlCommand,
+    setDatabaseUsernameCommand,
+    setDatabasePasswordCommand,
+    setDatabaseNameCommand,
     `--set-string web.image.tag="${GIT_SHORT_HASH}"`,
     `--set-string graphql.image.tag="${GIT_SHORT_HASH}"`,
     `--set        graphql.app.objectStorage.r2.enabled=true`,
