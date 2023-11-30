@@ -7,7 +7,7 @@
   "devDependencies": {
     "@affine-test/fixtures": "workspace:*",
     "@affine-test/kit": "workspace:*",
-    "@playwright/test": "^1.37.0"
+    "@playwright/test": "^1.39.0"
   },
-  "version": "0.8.0-canary.20"
+  "version": "0.10.3-canary.2"
 }

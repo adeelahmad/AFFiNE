@@ -32,34 +32,49 @@ const createPattern = packageName => [
     importNames: ['useNavigate'],
   },
   {
+    group: ['next-auth/react'],
+    message: "Import hooks from 'use-current-user.tsx'",
+    // useSession is type unsafe
+    importNames: ['useSession'],
+  },
+  {
+    group: ['next-auth/react'],
+    message: "Import hooks from 'cloud-utils.ts'",
+    importNames: ['signIn', 'signOut'],
+  },
+  {
     group: ['yjs'],
     message: 'Do not use this API because it has a bug',
     importNames: ['mergeUpdates'],
   },
+  {
+    group: ['@affine/env/constant'],
+    message:
+      'Do not import from @affine/env/constant. Use `environment.isDesktop` instead',
+    importNames: ['isDesktop'],
+  },
 ];
 
 const allPackages = [
-  'packages/cli',
-  'packages/component',
-  'packages/debug',
-  'packages/env',
-  'packages/graphql',
-  'packages/hooks',
-  'packages/i18n',
-  'packages/jotai',
-  'packages/native',
-  'packages/infra',
-  'packages/sdk',
-  'packages/templates',
-  'packages/theme',
-  'packages/workspace',
-  'packages/y-indexeddb',
-  'apps/web',
-  'apps/server',
-  'apps/electron',
-  'apps/storybook',
-  'plugins/copilot',
-  'plugins/bookmark-block',
+  'packages/backend/server',
+  'packages/frontend/component',
+  'packages/frontend/core',
+  'packages/frontend/electron',
+  'packages/frontend/graphql',
+  'packages/frontend/hooks',
+  'packages/frontend/i18n',
+  'packages/frontend/native',
+  'packages/frontend/templates',
+  'packages/frontend/workspace',
+  'packages/common/debug',
+  'packages/common/env',
+  'packages/common/infra',
+  'packages/common/sdk',
+  'packages/common/theme',
+  'packages/common/y-indexeddb',
+  'packages/plugins/copilot',
+  'tools/cli',
+  'tests/storybook',
 ];
 
 /**
@@ -72,7 +87,7 @@ const config = {
       version: 'detect',
     },
     next: {
-      rootDir: 'apps/web',
+      rootDir: 'packages/frontend/core',
     },
   },
   extends: [
@@ -111,11 +126,18 @@ const config = {
     'no-cond-assign': 'off',
     'no-constant-binary-expression': 'error',
     'no-constructor-return': 'error',
+    'no-self-compare': 'error',
+    eqeqeq: ['error', 'always', { null: 'ignore' }],
     'react/prop-types': 'off',
+    'react/jsx-no-useless-fragment': 'error',
     '@typescript-eslint/consistent-type-imports': 'error',
     '@typescript-eslint/no-non-null-assertion': 'error',
     '@typescript-eslint/no-explicit-any': 'off',
     '@typescript-eslint/no-empty-function': 'off',
+    '@typescript-eslint/await-thenable': 'error',
+    '@typescript-eslint/require-array-sort-compare': 'error',
+    '@typescript-eslint/unified-signatures': 'error',
+    '@typescript-eslint/prefer-for-of': 'error',
     '@typescript-eslint/no-unused-vars': [
       'error',
       {
@@ -161,6 +183,17 @@ const config = {
             importNames: ['useNavigate'],
           },
           {
+            group: ['next-auth/react'],
+            message: "Import hooks from 'use-current-user.tsx'",
+            // useSession is type unsafe
+            importNames: ['useSession'],
+          },
+          {
+            group: ['next-auth/react'],
+            message: "Import hooks from 'cloud-utils.ts'",
+            importNames: ['signIn', 'signOut'],
+          },
+          {
             group: ['yjs'],
             message: 'Do not use this API because it has a bug',
             importNames: ['mergeUpdates'],
@@ -175,6 +208,18 @@ const config = {
         ignore: ['^\\[[a-zA-Z0-9-_]+\\]\\.tsx$'],
       },
     ],
+    'unicorn/no-unnecessary-await': 'error',
+    'unicorn/no-useless-fallback-in-spread': 'error',
+    'unicorn/prefer-dom-node-dataset': 'error',
+    'unicorn/prefer-dom-node-append': 'error',
+    'unicorn/prefer-dom-node-remove': 'error',
+    'unicorn/prefer-array-some': 'error',
+    'unicorn/prefer-date-now': 'error',
+    'unicorn/prefer-blob-reading-methods': 'error',
+    'unicorn/no-typeof-undefined': 'error',
+    'unicorn/no-useless-promise-resolve-reject': 'error',
+    'unicorn/no-new-array': 'error',
+    'unicorn/new-for-builtins': 'error',
     'sonarjs/no-all-duplicated-branches': 'error',
     'sonarjs/no-element-overwrite': 'error',
     'sonarjs/no-empty-collection': 'error',
@@ -194,7 +239,7 @@ const config = {
   },
   overrides: [
     {
-      files: 'apps/server/**/*.ts',
+      files: 'packages/backend/server/**/*.ts',
       rules: {
         '@typescript-eslint/consistent-type-imports': 0,
       },
@@ -225,6 +270,14 @@ const config = {
           },
         ],
         '@typescript-eslint/no-misused-promises': ['error'],
+        '@typescript-eslint/prefer-readonly': 'error',
+        'i/no-extraneous-dependencies': ['error'],
+        'react-hooks/exhaustive-deps': [
+          'warn',
+          {
+            additionalHooks: 'useAsyncCallback',
+          },
+        ],
       },
     })),
     {
@@ -251,6 +304,7 @@ const config = {
         ],
         '@typescript-eslint/no-floating-promises': 0,
         '@typescript-eslint/no-misused-promises': 0,
+        '@typescript-eslint/no-restricted-imports': 0,
       },
     },
   ],

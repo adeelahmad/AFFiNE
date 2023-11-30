@@ -11,7 +11,7 @@
     }
   },
   "affected": {
-    "defaultBase": "master"
+    "defaultBase": "canary"
   },
   "namedInputs": {
     "default": ["{projectRoot}/**/*", "sharedGlobals"],
@@ -32,12 +32,11 @@
         "{projectRoot}/dist",
         "{projectRoot}/build",
         "{projectRoot}/out",
-        "{projectRoot}/storybook-static",
-        "{workspaceRoot}/packages/i18n/src/i18n-generated.ts"
+        "{projectRoot}/storybook-static"
       ],
       "inputs": [
-        "{workspaceRoot}/infra/**/*",
-        "{workspaceRoot}/sdk/**/*",
+        "{workspaceRoot}/packages/frontend/infra/**/*",
+        "{workspaceRoot}/packages/frontend/sdk/**/*",
         {
           "runtime": "node -v"
         },
@@ -82,9 +81,6 @@
       "outputs": ["{workspaceRoot}/.nyc_output"],
       "inputs": [
         {
-          "env": "NATIVE_TEST"
-        },
-        {
           "env": "ENABLE_PRELOADING"
         },
         {
@@ -96,9 +92,6 @@
       "outputs": ["{workspaceRoot}/.nyc_output"],
       "inputs": [
         {
-          "env": "NATIVE_TEST"
-        },
-        {
           "env": "ENABLE_PRELOADING"
         },
         {
@@ -109,9 +102,6 @@
     "test:coverage": {
       "outputs": ["{workspaceRoot}/.nyc_output"],
       "inputs": [
-        {
-          "env": "NATIVE_TEST"
-        },
         {
           "env": "ENABLE_PRELOADING"
         }

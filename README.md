@@ -31,6 +31,7 @@
 [![blocksuite-icon]](https://github.com/toeverything/blocksuite)
 [![Rust-version-icon]](https://www.rust-lang.org/)
 [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftoeverything%2FAFFiNE.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftoeverything%2FAFFiNE?ref=badge_shield)
+[![Deploy](https://github.com/toeverything/AFFiNE/actions/workflows/deploy.yml/badge.svg)](https://github.com/toeverything/AFFiNE/actions/workflows/deploy.yml)
 
 </div>
 
@@ -77,7 +78,7 @@ Star us, and you will receive all releases notifications from GitHub without any
 
 - **Hyper merged** — Write, draw and plan all at once. Assemble any blocks you love on any canvas you like to enjoy seamless transitions between workflows with AFFiNE.
 - **Privacy focussed** — AFFiNE is built with your privacy in mind and is one of our key concerns. We want you to keep control of your data, allowing you to store it as you like, where you like while still being able to freely edit and view your data on-demand.
-- **Offline-first** - With your privacy in mind we also decided to go offline-first. This means that AFFiNE can be used offline, whether you want to view or edit, with support for conflict-free merging when you are back online.
+- **Offline-first** — With your privacy in mind we also decided to go offline-first. This means that AFFiNE can be used offline, whether you want to view or edit, with support for conflict-free merging when you are back online.
 - **Clean, intuitive design** — With AFFiNE you can concentrate on editing with a clean and modern interface. Which is responsive, so it looks great on tablets too, and mobile support is coming in the future.
 - **Modern Block Editor with Markdown support** — A modern block editor can help you not only for docs, but slides and tables as well. When you write in AFFiNE you can use Markdown syntax which helps create an easier editing experience, that can be experienced with just a keyboard. And this allows you to export your data cleanly into Markdown.
 - **Collaboration** — Whether you want to collaborate with yourself across multiple devices, or work together with others, support for collaboration and multiplayer is out-of-the-box, which makes it easy for teams to get started with AFFiNE.
@@ -106,11 +107,12 @@ If you have questions, you are welcome to contact us. One of the best places to 
 
 ## Ecosystem
 
-| Name                                                      |                                    |                                                                                                                                                     |
-| --------------------------------------------------------- | ---------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [@affine/component](https://affine-storybook.vercel.app/) | AFFiNE Component Resources         | [![](https://img.shields.io/codecov/c/github/toeverything/affine?style=flat-square)](https://affine-storybook.vercel.app/)                          |
-| [@toeverything/y-indexeddb](packages/y-indexeddb)         | IndexedDB database adapter for Yjs | [![](https://img.shields.io/npm/dm/@toeverything/y-indexeddb?style=flat-square&color=eee)](https://www.npmjs.com/package/@toeverything/y-indexeddb) |
-| [@toeverything/theme](packages/theme)                     | AFFiNE theme                       | [![](https://img.shields.io/npm/dm/@toeverything/theme?style=flat-square&color=eee)](https://www.npmjs.com/package/@toeverything/theme)             |
+| Name                                                                                            |                                         |                                                                                                                                                     |
+| ----------------------------------------------------------------------------------------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [@toeverything/component](https://github.com/toeverything/design/tree/main/packages/components) | Toeverything Shared Component Resources |                                                                                                                                                     |
+| [@affine/component](packages/frontend/component)                                                | AFFiNE Component Resources              | [![](https://img.shields.io/codecov/c/github/toeverything/affine?style=flat-square)](https://affine-storybook.vercel.app/)                          |
+| [@toeverything/y-indexeddb](packages/common/y-indexeddb)                                        | IndexedDB database adapter for Yjs      | [![](https://img.shields.io/npm/dm/@toeverything/y-indexeddb?style=flat-square&color=eee)](https://www.npmjs.com/package/@toeverything/y-indexeddb) |
+| [@toeverything/theme](packages/common/theme)                                                    | AFFiNE theme                            | [![](https://img.shields.io/npm/dm/@toeverything/theme?style=flat-square&color=eee)](https://www.npmjs.com/package/@toeverything/theme)             |
 
 ## Plugins
 
@@ -118,16 +120,16 @@ If you have questions, you are welcome to contact us. One of the best places to 
 >
 > (Currently, the plugin system is under heavy development. You will see the plugin system in the canary release.)
 
-- [@affine/sdk](./packages/sdk) - SDK for developing plugins
-- [@affine/plugin-cli](./packages/plugin-cli) - CLI for developing plugins
+- [@affine/sdk](./packages/common/sdk) - SDK for developing plugins
+- [@affine/plugin-cli](./tools/plugin-cli) - CLI for developing plugins
 
-| Official Plugin                                       | Description                               |
-| ----------------------------------------------------- | ----------------------------------------- |
-| [@affine/bookmark-plugin](plugins/bookmark)           | A block for bookmarking a website         |
-| [@affine/copilot-plugin](plugins/copilot)             | AI Copilot that help you document writing |
-| [@affine/image-preview-plugin](plugins/image-preview) | Component for previewing an image         |
+| Official Plugin                                                  | Description                               | Status |
+| ---------------------------------------------------------------- | ----------------------------------------- | ------ |
+| [@affine/copilot-plugin](./packages/plugins/copilot)             | AI Copilot that help you document writing | 🚧     |
+| [@affine/image-preview-plugin](./packages/plugins/image-preview) | Component for previewing an image         | ✅     |
+| [@affine/outline](./packages/plugins/outline)                    | Outline for your document                 | ✅     |
 
-## Thanks
+## Upstreams
 
 We would also like to give thanks to open-source projects that make AFFiNE possible:
 
@@ -144,7 +146,7 @@ We would also like to give thanks to open-source projects that make AFFiNE possi
 
 Thanks a lot to the community for providing such powerful and simple libraries, so that we can focus more on the implementation of the product logic, and we hope that in the future our projects will also provide a more easy-to-use knowledge base for everyone.
 
-# Contributors
+## Contributors
 
 We would like to express our gratitude to all the individuals who have already contributed to AFFiNE! If you have any AFFiNE-related project, documentation, tool or template, please feel free to contribute it by submitting a pull request to our curated list on GitHub: [awesome-affine](https://github.com/toeverything/awesome-affine).
 
@@ -152,7 +154,29 @@ We would like to express our gratitude to all the individuals who have already c
   <img alt="contributors" src="https://opencollective.com/affine/contributors.svg?width=890&button=false" />
 </a>
 
+## Data Compatibility
+
+Data compatibility is a very important issue for us. We will try our best to ensure that the data is compatible with the previous version.
+
+If you encounter any problems when upgrading the version, please feel free to [contact us](mailto:developer@toeverything.info).
+
+| AFFiNE Version  | Export/Import workspace | Data auto migration |
+| --------------- | ----------------------- | ------------------- |
+| <= 0.5.4        | ❌️                     | ❌                  |
+| 0.6.x           | ✅️                     | ✅                  |
+| 0.7.x           | ✅️                     | ✅                  |
+| 0.8.x (current) | ✅                      | ✅                  |
+| 0.9.x (next)    | 🚧                      | 🚧                  |
+
+- ❌️: Not compatible
+- ✅: Compatible
+- 🚧: Work in progress
+
 ## Self-Host
+
+> We know that the self-host version has been out of date for a long time.
+>
+> We are working hard to get this updated to the latest version, you can try our desktop version first.
 
 Get started with Docker and deploy your own feature-rich, restriction-free deployment of AFFiNE.
 We are working hard to get this updated to the latest version, you can keep an eye on the [latest packages].
@@ -171,6 +195,13 @@ For feature request, please see [community.affine.pro](https://community.affine.
 
 ## Building
 
+### Codespaces
+
+From the GitHub repo main page, click the green "Code" button and select "Create codespace on master". This will open a new Codespace with the (supposedly auto-forked
+AFFiNE repo cloned, built, and ready to go.
+
+### Local
+
 See [BUILDING.md] for instructions on how to build AFFiNE from source code.
 
 ## Contributing
@@ -178,23 +209,29 @@ See [BUILDING.md] for instructions on how to build AFFiNE from source code.
 We welcome contributions from everyone.
 See [docs/contributing/tutorial.md](./docs/contributing/tutorial.md) for details.
 
+## Thanks
+
+<a href="https://www.chromatic.com/"><img src="https://user-images.githubusercontent.com/321738/84662277-e3db4f80-af1b-11ea-88f5-91d67a5e59f6.png" width="153" height="30" alt="Chromatic" /></a>
+
+Thanks to [Chromatic](https://www.chromatic.com/) for providing the visual testing platform that helps us review UI changes and catch visual regressions.
+
 ## License
 
 See [LICENSE] for details.
 
-[all-contributors-badge]: https://img.shields.io/github/all-contributors/toeverything/AFFiNE/master?color=orange
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftoeverything%2FAFFiNE.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftoeverything%2FAFFiNE?ref=badge_large)
+
+[all-contributors-badge]: https://img.shields.io/github/contributors/toeverything/AFFiNE
 [license]: ./LICENSE
 [building.md]: ./docs/BUILDING.md
 [update page]: https://affine.pro/blog?tag=Release%20Note
 [jobs available]: ./docs/jobs.md
 [latest packages]: https://github.com/toeverything/AFFiNE/pkgs/container/affine-self-hosted
-[contributor license agreement]: https://github.com/toeverything/affine/edit/master/.github/CLA.md
-[rust-version-icon]: https://img.shields.io/badge/Rust-1.71.0-dea584
+[contributor license agreement]: https://github.com/toeverything/affine/edit/canary/.github/CLA.md
+[rust-version-icon]: https://img.shields.io/badge/Rust-1.74.0-dea584
 [stars-icon]: https://img.shields.io/github/stars/toeverything/AFFiNE.svg?style=flat&logo=github&colorB=red&label=stars
-[codecov]: https://codecov.io/gh/toeverything/affine/branch/master/graphs/badge.svg?branch=master
+[codecov]: https://codecov.io/gh/toeverything/affine/branch/canary/graphs/badge.svg?branch=canary
 [node-version-icon]: https://img.shields.io/badge/node-%3E=18.16.1-success
 [typescript-version-icon]: https://img.shields.io/github/package-json/dependency-version/toeverything/affine/dev/typescript
-[react-version-icon]: https://img.shields.io/github/package-json/dependency-version/toeverything/AFFiNE/react?filename=apps%2Fcore%2Fpackage.json&color=rgb(97%2C228%2C251)
-[blocksuite-icon]: https://img.shields.io/github/package-json/dependency-version/toeverything/AFFiNE/@blocksuite/store?color=6880ff&filename=apps%2Fcore%2Fpackage.json&label=blocksuite
-
-[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ftoeverything%2FAFFiNE.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Ftoeverything%2FAFFiNE?ref=badge_large)
+[react-version-icon]: https://img.shields.io/github/package-json/dependency-version/toeverything/AFFiNE/react?filename=packages%2Ffrontend%2Fcore%2Fpackage.json&color=rgb(97%2C228%2C251)
+[blocksuite-icon]: https://img.shields.io/github/package-json/dependency-version/toeverything/AFFiNE/@blocksuite/store?color=6880ff&filename=packages%2Ffrontend%2Fcore%2Fpackage.json&label=blocksuite

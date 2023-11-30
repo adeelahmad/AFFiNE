@@ -1,14 +1,14 @@
 import { test } from '@affine-test/kit/playwright';
 import { openHomePage } from '@affine-test/kit/utils/load-page';
-import { waitEditorLoad } from '@affine-test/kit/utils/page-logic';
-import { createWorkspace } from '@affine-test/kit/utils/workspace';
+import { waitForEditorLoad } from '@affine-test/kit/utils/page-logic';
+import { createLocalWorkspace } from '@affine-test/kit/utils/workspace';
 import { expect } from '@playwright/test';
 
 test('Open last workspace when back to affine', async ({ page }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
-  await createWorkspace({ name: 'New Workspace 2' }, page);
-  await waitEditorLoad(page);
+  await waitForEditorLoad(page);
+  await createLocalWorkspace({ name: 'New Workspace 2' }, page);
+  await waitForEditorLoad(page);
   // show workspace list
   await page.getByTestId('workspace-name').click();
 
@@ -25,20 +25,26 @@ test('Open last workspace when back to affine', async ({ page }) => {
   expect(currentWorkspaceName).toEqual('New Workspace 2');
 });
 
-test.skip('Download client tip', async ({ page }) => {
+test('Download client tip', async ({ page }) => {
   await openHomePage(page);
-  const downloadClientTipItem = page.locator(
-    '[data-testid=download-client-tip]'
-  );
-  await expect(downloadClientTipItem).toBeVisible();
+  const localDemoTipsItem = page.locator('[data-testid=local-demo-tips]');
+  await expect(localDemoTipsItem).toBeVisible();
   const closeButton = page.locator(
-    '[data-testid=download-client-tip-close-button]'
+    '[data-testid=local-demo-tips-close-button]'
   );
   await closeButton.click();
-  await expect(downloadClientTipItem).not.toBeVisible();
-  await page.goto('http://localhost:8080');
-  const currentDownloadClientTipItem = page.locator(
-    '[data-testid=download-client-tip]'
+  await expect(localDemoTipsItem).not.toBeVisible();
+  await page.reload();
+  const currentLocalDemoTipsItemItem = page.locator(
+    '[data-testid=local-demo-tips]'
   );
-  await expect(currentDownloadClientTipItem).toBeVisible();
+  await expect(currentLocalDemoTipsItemItem).toBeVisible();
+});
+
+test('Check the class name for the scrollbar', async ({ page }) => {
+  //Because the scroll bar in page mode depends on the class name of blocksuite
+  await openHomePage(page);
+  await waitForEditorLoad(page);
+  const affineDocViewport = page.locator('.affine-doc-viewport');
+  await expect(affineDocViewport).toBeVisible();
 });

@@ -1,10 +1,11 @@
 import { test } from '@affine-test/kit/playwright';
 import { openHomePage } from '@affine-test/kit/utils/load-page';
 import {
+  clickNewPageButton,
   clickPageMoreActions,
   getBlockSuiteEditorTitle,
-  newPage,
-  waitEditorLoad,
+  getPageByTitle,
+  waitForEditorLoad,
 } from '@affine-test/kit/utils/page-logic';
 import { waitForLogMessage } from '@affine-test/kit/utils/utils';
 import { expect } from '@playwright/test';
@@ -14,14 +15,14 @@ test('New a page and open it ,then favorite it', async ({
   workspace,
 }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
-  await newPage(page);
+  await waitForEditorLoad(page);
+  await clickNewPageButton(page);
   await getBlockSuiteEditorTitle(page).click();
   await getBlockSuiteEditorTitle(page).fill('this is a new page to favorite');
   await page.getByTestId('all-pages').click();
-  const cell = page.getByRole('cell', {
-    name: 'this is a new page to favorite',
-  });
+  const cell = page
+    .getByTestId('page-list-item')
+    .getByText('this is a new page to favorite');
   expect(cell).not.toBeUndefined();
 
   await cell.click();
@@ -35,10 +36,10 @@ test('New a page and open it ,then favorite it', async ({
 
 test('Export to html, markdown and png', async ({ page }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
+  await waitForEditorLoad(page);
   {
     await clickPageMoreActions(page);
-    await page.getByTestId('export-menu').click();
+    await page.getByTestId('export-menu').hover();
     const downloadPromise = page.waitForEvent('download');
     await page.getByTestId('export-to-markdown').click();
     await downloadPromise;
@@ -69,7 +70,7 @@ test.skip('Export to pdf', async ({ page }) => {
     });
   });
   await openHomePage(page);
-  await waitEditorLoad(page);
+  await waitForEditorLoad(page);
   {
     await clickPageMoreActions(page);
     await page.getByTestId('export-menu').click();
@@ -80,14 +81,12 @@ test.skip('Export to pdf', async ({ page }) => {
 
 test('Cancel favorite', async ({ page, workspace }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
-  await newPage(page);
+  await waitForEditorLoad(page);
+  await clickNewPageButton(page);
   await getBlockSuiteEditorTitle(page).click();
   await getBlockSuiteEditorTitle(page).fill('this is a new page to favorite');
   await page.getByTestId('all-pages').click();
-  const cell = page.getByRole('cell', {
-    name: 'this is a new page to favorite',
-  });
+  const cell = getPageByTitle(page, 'this is a new page to favorite');
   expect(cell).not.toBeUndefined();
 
   await cell.click();
@@ -105,9 +104,10 @@ test('Cancel favorite', async ({ page, workspace }) => {
 
   await page.getByTestId('all-pages').click();
 
-  const box = await page
-    .getByRole('cell', { name: 'this is a new page to favorite' })
-    .boundingBox();
+  const box = await getPageByTitle(
+    page,
+    'this is a new page to favorite'
+  ).boundingBox();
   //hover table record
   await page.mouse.move((box?.x ?? 0) + 10, (box?.y ?? 0) + 10);
 

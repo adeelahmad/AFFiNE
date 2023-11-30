@@ -18,16 +18,14 @@ Note that if you encounter any issues with installing Rust and crates, try follo
 To run AFFiNE Desktop Client Application locally, run the following commands:
 
 ```sh
-
 # in repo root
 yarn install
 yarn dev
 
-# in packages/native
+# in packages/frontend/native
 yarn build
 
-# in apps/electron
-yarn generate-assets
+# in packages/frontend/electron
 yarn dev
 ```
 
@@ -35,7 +33,7 @@ Now you should see the Electron app window popping up shortly.
 
 ## Build
 
-To build the desktop client application, run `yarn make` in `apps/electron`.
+To build the desktop client application, run `yarn make` in `packages/frontend/electron`.
 
 Note: you may want to comment out `osxSign` and `osxNotarize` in `forge.config.js` to avoid signing and notarizing the app.
 
@@ -43,7 +41,7 @@ Once the build is complete, you can find the paths to the binaries in the termin
 
 ```
 Finished 2 bundles at:
-  › Artifacts available at: <affine-repo>/apps/electron/out/make
+  › Artifacts available at: <affine-repo>/packages/frontend/electron/out/make
 ```
 
 ## CI

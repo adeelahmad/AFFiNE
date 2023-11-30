@@ -1,9 +1,9 @@
-import type { Page } from '@playwright/test';
+import type { Locator, Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-export async function waitEditorLoad(page: Page) {
+export async function waitForEditorLoad(page: Page) {
   await page.waitForSelector('v-line', {
-    timeout: 10000,
+    timeout: 20000,
   });
 }
 
@@ -14,12 +14,12 @@ export async function waitForAllPagesLoad(page: Page) {
   });
 }
 
-export async function newPage(page: Page) {
+export async function clickNewPageButton(page: Page) {
   // fixme(himself65): if too fast, the page will crash
-  await page.getByTestId('new-page-button').click({
+  await page.getByTestId('new-page-button').first().click({
     delay: 100,
   });
-  await waitEditorLoad(page);
+  await waitForEditorLoad(page);
 }
 
 export function getBlockSuiteEditorTitle(page: Page) {
@@ -28,11 +28,6 @@ export function getBlockSuiteEditorTitle(page: Page) {
 
 export async function type(page: Page, content: string, delay = 50) {
   await page.keyboard.type(content, { delay });
-}
-
-export async function pressEnter(page: Page) {
-  // avoid flaky test by simulate real user input
-  await page.keyboard.press('Enter', { delay: 50 });
 }
 
 export const createLinkedPage = async (page: Page, pageName?: string) => {
@@ -56,3 +51,28 @@ export async function clickPageMoreActions(page: Page) {
     .getByTestId('header-dropDownButton')
     .click();
 }
+
+export const getPageOperationButton = (page: Page, id: string) => {
+  return getPageItem(page, id).getByTestId('page-list-operation-button');
+};
+
+export const getPageItem = (page: Page, id: string) => {
+  return page.locator(`[data-page-id="${id}"][data-testid="page-list-item"]`);
+};
+
+export const getPageByTitle = (page: Page, title: string) => {
+  return page.getByTestId('page-list-item').getByText(title);
+};
+
+export const dragTo = async (page: Page, locator: Locator, target: Locator) => {
+  await locator.hover();
+  await page.mouse.down();
+  await page.waitForTimeout(1000);
+  const targetElement = await target.boundingBox();
+  if (!targetElement) {
+    throw new Error('target element not found');
+  }
+  await page.mouse.move(targetElement.x, targetElement.y);
+  await target.hover();
+  await page.mouse.up();
+};

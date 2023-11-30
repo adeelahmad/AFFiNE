@@ -1,9 +1,10 @@
 import { test } from '@affine-test/kit/playwright';
+import { getPagesCount } from '@affine-test/kit/utils/filter';
 import { openHomePage } from '@affine-test/kit/utils/load-page';
-import { waitEditorLoad } from '@affine-test/kit/utils/page-logic';
+import { waitForEditorLoad } from '@affine-test/kit/utils/page-logic';
 import { clickSideBarAllPageButton } from '@affine-test/kit/utils/sidebar';
 import {
-  createWorkspace,
+  createLocalWorkspace,
   openWorkspaceListModal,
 } from '@affine-test/kit/utils/workspace';
 import { expect } from '@playwright/test';
@@ -13,7 +14,7 @@ test('just one item in the workspace list at first', async ({
   workspace,
 }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
+  await waitForEditorLoad(page);
   const workspaceName = page.getByTestId('workspace-name');
   await workspaceName.click();
   expect(
@@ -32,9 +33,9 @@ test('create one workspace in the workspace list', async ({
   workspace,
 }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
+  await waitForEditorLoad(page);
   const newWorkspaceNameStr = 'New Workspace';
-  await createWorkspace({ name: newWorkspaceNameStr }, page);
+  await createLocalWorkspace({ name: newWorkspaceNameStr }, page);
 
   // check new workspace name
   const newWorkspaceName = page.getByTestId('workspace-name');
@@ -45,18 +46,15 @@ test('create one workspace in the workspace list', async ({
   expect(workspaceCards.length).toBe(2);
 
   //check page list length
-  const closeWorkspaceModal = page.getByTestId('close-workspace-modal');
-  await closeWorkspaceModal.click();
+  await page.keyboard.press('Escape');
   await clickSideBarAllPageButton(page);
-  await page.waitForTimeout(1000);
-  const pageList = page.locator('[data-testid=page-list-item]');
-  const result = await pageList.count();
-  expect(result).toBe(0);
+  await page.waitForTimeout(2000);
+  const result = await getPagesCount(page);
+  expect(result).toBe(13);
   await page.reload();
-  await page.waitForTimeout(1000);
-  const pageList1 = page.locator('[data-testid=page-list-item]');
-  const result1 = await pageList1.count();
-  expect(result1).toBe(0);
+  await page.waitForTimeout(4000);
+  const result1 = await getPagesCount(page);
+  expect(result1).toBe(13);
   const currentWorkspace = await workspace.current();
 
   expect(currentWorkspace.flavour).toContain('local');
@@ -67,13 +65,15 @@ test('create multi workspace in the workspace list', async ({
   workspace,
 }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
-  await createWorkspace({ name: 'New Workspace 2' }, page);
-  await createWorkspace({ name: 'New Workspace 3' }, page);
+  await waitForEditorLoad(page);
+  await createLocalWorkspace({ name: 'New Workspace 2' }, page);
+  await createLocalWorkspace({ name: 'New Workspace 3' }, page);
 
   // show workspace list
   const workspaceName = page.getByTestId('workspace-name');
   await workspaceName.click();
+
+  await page.waitForTimeout(1000);
 
   {
     //check workspace list length
@@ -91,6 +91,7 @@ test('create multi workspace in the workspace list', async ({
   expect(currentWorkspace.flavour).toContain('local');
 
   await openWorkspaceListModal(page);
+  await page.waitForTimeout(1000);
   const sourceElement = page.getByTestId('draggable-item').nth(2);
   const targetElement = page.getByTestId('draggable-item').nth(1);
 
@@ -124,8 +125,9 @@ test('create multi workspace in the workspace list', async ({
   await page.waitForTimeout(1000);
   // check workspace list length
   {
-    const workspaceCards1 = await page.$$('data-testid=workspace-card');
-    expect(workspaceCards1.length).toBe(3);
+    await page.waitForTimeout(1000);
+    const workspaceCards = page.getByTestId('workspace-card');
+    expect(await workspaceCards.count()).toBe(3);
   }
 
   const workspaceChangePromise = page.evaluate(() => {

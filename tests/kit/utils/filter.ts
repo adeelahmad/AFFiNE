@@ -1,7 +1,7 @@
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
 
-import { getBlockSuiteEditorTitle, newPage } from './page-logic';
+import { clickNewPageButton, getBlockSuiteEditorTitle } from './page-logic';
 
 const monthNames = [
   'Jan',
@@ -19,13 +19,11 @@ const monthNames = [
 ];
 
 export const createFirstFilter = async (page: Page, name: string) => {
-  await page
-    .locator('[data-testid="header"]')
-    .locator('button', { hasText: 'Filter' })
-    .click();
+  await page.locator('[data-testid="create-first-filter"]').click();
   await page
     .locator('[data-testid="variable-select-item"]', { hasText: name })
     .click();
+  await page.keyboard.press('Escape');
 };
 
 export const checkFilterName = async (page: Page, name: string) => {
@@ -41,10 +39,19 @@ const dateFormat = (date: Date) => {
   return `${month} ${day}`;
 };
 
-export const checkPagesCount = async (page: Page, count: number) => {
-  expect((await page.locator('[data-testid="title"]').all()).length).toBe(
-    count
-  );
+// fixme: there could be multiple page lists in the Page
+export const getPagesCount = async (page: Page) => {
+  const locator = page.locator('[data-testid="virtualized-page-list"]');
+  const pageListCount = await locator.count();
+
+  if (pageListCount === 0) {
+    return 0;
+  }
+
+  // locator is not a HTMLElement, so we can't use dataset
+  // eslint-disable-next-line unicorn/prefer-dom-node-dataset
+  const count = await locator.getAttribute('data-total-count');
+  return count ? parseInt(count) : 0;
 };
 
 export const checkDatePicker = async (page: Page, date: Date) => {
@@ -189,7 +196,7 @@ export const createPageWithTag = async (
   }
 ) => {
   await page.getByTestId('all-pages').click();
-  await newPage(page);
+  await clickNewPageButton(page);
   await getBlockSuiteEditorTitle(page).click();
   await getBlockSuiteEditorTitle(page).fill('test page');
   await page.locator('affine-page-meta-data').click();
@@ -200,20 +207,13 @@ export const createPageWithTag = async (
   await page.keyboard.press('Escape');
 };
 
-export const changeFilter = async (page: Page, to: string | RegExp) => {
+export const changeFilter = async (page: Page, to: string) => {
   await page.getByTestId('filter-name').click();
-  await page
-    .getByTestId('filter-name-select')
-    .locator('button', { hasText: to })
-    .click();
+  await page.getByTestId(`filler-tag-${to}`).click();
 };
 
 export async function selectTag(page: Page, name: string | RegExp) {
   await page.getByTestId('filter-arg').click();
-  await page
-    .getByTestId('multi-select')
-    .getByTestId('select-option')
-    .getByText(name, { exact: true })
-    .click();
-  await page.getByTestId('filter-arg').click();
+  await page.getByTestId(`multi-select-${name}`).click();
+  await page.keyboard.press('Escape', { delay: 100 });
 }

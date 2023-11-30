@@ -1,0 +1,8 @@
+mutation changeEmail($token: String!) {
+  changeEmail(token: $token) {
+    id
+    name
+    avatarUrl
+    email
+  }
+}

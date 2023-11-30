@@ -1,0 +1,13 @@
+query getCurrentUser {
+  currentUser {
+    id
+    name
+    email
+    emailVerified
+    avatarUrl
+    createdAt
+    token {
+      sessionToken
+    }
+  }
+}

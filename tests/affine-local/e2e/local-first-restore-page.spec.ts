@@ -1,9 +1,10 @@
 import { test } from '@affine-test/kit/playwright';
 import { openHomePage } from '@affine-test/kit/utils/load-page';
 import {
+  clickNewPageButton,
   getBlockSuiteEditorTitle,
-  newPage,
-  waitEditorLoad,
+  getPageOperationButton,
+  waitForEditorLoad,
 } from '@affine-test/kit/utils/page-logic';
 import { expect } from '@playwright/test';
 
@@ -12,8 +13,8 @@ test('New a page , then delete it in all pages, restore it', async ({
   workspace,
 }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
-  await newPage(page);
+  await waitForEditorLoad(page);
+  await clickNewPageButton(page);
   await getBlockSuiteEditorTitle(page).click();
   await getBlockSuiteEditorTitle(page).fill('this is a new page to restore');
   const newPageId = page.url().split('/').reverse()[0];
@@ -23,11 +24,7 @@ test('New a page , then delete it in all pages, restore it', async ({
   });
   expect(cell).not.toBeUndefined();
 
-  await page
-    .getByTestId('more-actions-' + newPageId)
-    .getByRole('button')
-    .first()
-    .click();
+  await getPageOperationButton(page, newPageId).click();
   const deleteBtn = page.getByTestId('move-to-trash');
   await deleteBtn.click();
   const confirmTip = page.getByText('Delete page?');
@@ -39,11 +36,7 @@ test('New a page , then delete it in all pages, restore it', async ({
   await page.waitForTimeout(50);
   const trashPage = page.url();
   // restore it
-  await page
-    .getByTestId('more-actions-' + newPageId)
-    .getByRole('button')
-    .first()
-    .click();
+  await page.getByTestId('restore-page-button').click();
 
   // stay in trash page
   expect(page.url()).toBe(trashPage);

@@ -1,9 +1,11 @@
 import { test } from '@affine-test/kit/playwright';
 import { openHomePage } from '@affine-test/kit/utils/load-page';
 import {
+  clickNewPageButton,
   getBlockSuiteEditorTitle,
-  newPage,
-  waitEditorLoad,
+  getPageItem,
+  getPageOperationButton,
+  waitForEditorLoad,
 } from '@affine-test/kit/utils/page-logic';
 import { expect } from '@playwright/test';
 
@@ -12,8 +14,8 @@ test('page delete -> refresh page -> it should be disappear', async ({
   workspace,
 }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
-  await newPage(page);
+  await waitForEditorLoad(page);
+  await clickNewPageButton(page);
   await getBlockSuiteEditorTitle(page).click();
   await getBlockSuiteEditorTitle(page).fill('this is a new page delete');
   const newPageId = page.url().split('/').reverse()[0];
@@ -22,22 +24,14 @@ test('page delete -> refresh page -> it should be disappear', async ({
     name: 'this is a new page delete',
   });
   expect(cell).not.toBeUndefined();
-  await page
-    .getByTestId('more-actions-' + newPageId)
-    .getByRole('button')
-    .first()
-    .click();
+  await getPageOperationButton(page, newPageId).click();
   const deleteBtn = page.getByTestId('move-to-trash');
   await deleteBtn.click();
   const confirmTip = page.getByText('Delete page?');
   expect(confirmTip).not.toBeUndefined();
   await page.getByRole('button', { name: 'Delete' }).click();
   await page.getByTestId('trash-page').click();
-  await page
-    .getByTestId('more-actions-' + newPageId)
-    .getByRole('button')
-    .nth(1)
-    .click();
+  await getPageItem(page, newPageId).getByTestId('delete-page-button').click();
   await page.getByText('Delete permanently?').dblclick();
   await page.getByRole('button', { name: 'Delete' }).click();
   await page.reload();
@@ -55,8 +49,8 @@ test('page delete -> create new page -> refresh page -> new page should be appea
   workspace,
 }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
-  await newPage(page);
+  await waitForEditorLoad(page);
+  await clickNewPageButton(page);
   await getBlockSuiteEditorTitle(page).click();
   await getBlockSuiteEditorTitle(page).fill('this is a new page delete');
   const newPageDeleteId = page.url().split('/').reverse()[0];
@@ -65,21 +59,15 @@ test('page delete -> create new page -> refresh page -> new page should be appea
     name: 'this is a new page delete',
   });
   expect(cellDelete).not.toBeUndefined();
-  await page
-    .getByTestId('more-actions-' + newPageDeleteId)
-    .getByRole('button')
-    .first()
-    .click();
+  await getPageOperationButton(page, newPageDeleteId).click();
   const deleteBtn = page.getByTestId('move-to-trash');
   await deleteBtn.click();
   const confirmTip = page.getByText('Delete page?');
   expect(confirmTip).not.toBeUndefined();
   await page.getByRole('button', { name: 'Delete' }).click();
   await page.getByTestId('trash-page').click();
-  await page
-    .getByTestId('more-actions-' + newPageDeleteId)
-    .getByRole('button')
-    .nth(1)
+  await getPageItem(page, newPageDeleteId)
+    .getByTestId('delete-page-button')
     .click();
   await page.getByText('Delete permanently?').dblclick();
   await page.getByRole('button', { name: 'Delete' }).click();
@@ -87,20 +75,22 @@ test('page delete -> create new page -> refresh page -> new page should be appea
   expect(page.getByText("There's no page here yet")).not.toBeUndefined();
   await page.getByTestId('all-pages').click();
 
-  await newPage(page);
+  await clickNewPageButton(page);
   await getBlockSuiteEditorTitle(page).click();
   await getBlockSuiteEditorTitle(page).fill('this is a new page1');
+  await page.waitForTimeout(1000);
   const newPageId1 = page.url().split('/').reverse()[0];
   await page.getByTestId('all-pages').click();
-  await newPage(page);
+  await clickNewPageButton(page);
   await getBlockSuiteEditorTitle(page).click();
   await getBlockSuiteEditorTitle(page).fill('this is a new page2');
+  await page.waitForTimeout(1000);
   const newPageId2 = page.url().split('/').reverse()[0];
   await page.getByTestId('all-pages').click();
   await page.reload();
-  await page.getByTestId(`page-list-item-${newPageId1}`).click();
+  await getPageItem(page, newPageId1).click();
   await page.getByTestId('all-pages').click();
-  await page.getByTestId(`page-list-item-${newPageId2}`).click();
+  await getPageItem(page, newPageId2).click();
   await page.getByTestId('all-pages').click();
 
   const currentWorkspace = await workspace.current();
@@ -113,15 +103,15 @@ test('delete multiple pages -> create multiple pages -> refresh', async ({
   workspace,
 }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
+  await waitForEditorLoad(page);
   // create 1st page
-  await newPage(page);
+  await clickNewPageButton(page);
   await getBlockSuiteEditorTitle(page).click();
   await getBlockSuiteEditorTitle(page).fill('this is a new page1');
   const newPageId1 = page.url().split('/').reverse()[0];
   await page.getByTestId('all-pages').click();
   // create 2nd page
-  await newPage(page);
+  await clickNewPageButton(page);
   await getBlockSuiteEditorTitle(page).click();
   await getBlockSuiteEditorTitle(page).fill('this is a new page2');
   const newPageId2 = page.url().split('/').reverse()[0];
@@ -132,22 +122,14 @@ test('delete multiple pages -> create multiple pages -> refresh', async ({
     name: 'this is a new page1',
   });
   expect(cellDelete1).not.toBeUndefined();
-  await page
-    .getByTestId('more-actions-' + newPageId1)
-    .getByRole('button')
-    .first()
-    .click();
+  await getPageOperationButton(page, newPageId1).click();
   const deleteBtn1 = page.getByTestId('move-to-trash');
   await deleteBtn1.click();
   const confirmTip1 = page.getByText('Delete page?');
   expect(confirmTip1).not.toBeUndefined();
   await page.getByRole('button', { name: 'Delete' }).click();
   await page.getByTestId('trash-page').click();
-  await page
-    .getByTestId('more-actions-' + newPageId1)
-    .getByRole('button')
-    .nth(1)
-    .click();
+  await getPageItem(page, newPageId1).getByTestId('delete-page-button').click();
   await page.getByText('Delete permanently?').dblclick();
   await page.getByRole('button', { name: 'Delete' }).click();
   await page.getByTestId('all-pages').click();
@@ -157,22 +139,14 @@ test('delete multiple pages -> create multiple pages -> refresh', async ({
     name: 'this is a new page2',
   });
   expect(cellDelete2).not.toBeUndefined();
-  await page
-    .getByTestId('more-actions-' + newPageId2)
-    .getByRole('button')
-    .first()
-    .click();
+  await getPageOperationButton(page, newPageId2).click();
   const deleteBtn2 = page.getByTestId('move-to-trash');
   await deleteBtn2.click();
   const confirmTip2 = page.getByText('Delete page?');
   expect(confirmTip2).not.toBeUndefined();
   await page.getByRole('button', { name: 'Delete' }).click();
   await page.getByTestId('trash-page').click();
-  await page
-    .getByTestId('more-actions-' + newPageId2)
-    .getByRole('button')
-    .nth(1)
-    .click();
+  await getPageItem(page, newPageId2).getByTestId('delete-page-button').click();
   await page.getByText('Delete permanently?').dblclick();
   await page.getByRole('button', { name: 'Delete' }).click();
   await page.getByTestId('all-pages').click();

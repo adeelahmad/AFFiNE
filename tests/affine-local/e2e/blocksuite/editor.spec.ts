@@ -1,9 +1,9 @@
 import { test } from '@affine-test/kit/playwright';
 import { openHomePage } from '@affine-test/kit/utils/load-page';
 import {
+  clickNewPageButton,
   getBlockSuiteEditorTitle,
-  newPage,
-  waitEditorLoad,
+  waitForEditorLoad,
 } from '@affine-test/kit/utils/page-logic';
 import type { Page } from '@playwright/test';
 import { expect } from '@playwright/test';
@@ -19,22 +19,22 @@ const addDatabase = async (page: Page) => {
 
 test('database is useable', async ({ page }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
-  await newPage(page);
-  await waitEditorLoad(page);
+  await waitForEditorLoad(page);
+  await clickNewPageButton(page);
+  await waitForEditorLoad(page);
   const title = getBlockSuiteEditorTitle(page);
-  await title.type('test title');
+  await title.pressSequentially('test title');
   await page.keyboard.press('Enter');
   expect(await title.innerText()).toBe('test title');
   await addDatabase(page);
   const database = page.locator('affine-database');
   await expect(database).toBeVisible();
   await page.reload();
-  await waitEditorLoad(page);
-  await newPage(page);
-  await waitEditorLoad(page);
+  await waitForEditorLoad(page);
+  await clickNewPageButton(page);
+  await waitForEditorLoad(page);
   const title2 = getBlockSuiteEditorTitle(page);
-  await title2.type('test title2');
+  await title2.pressSequentially('test title2');
   await page.waitForTimeout(500);
   expect(await title2.innerText()).toBe('test title2');
   await page.keyboard.press('Enter');
@@ -45,17 +45,17 @@ test('database is useable', async ({ page }) => {
 
 test('link page is useable', async ({ page }) => {
   await openHomePage(page);
-  await waitEditorLoad(page);
-  await newPage(page);
-  await waitEditorLoad(page);
-  const title = await getBlockSuiteEditorTitle(page);
-  await title.type('page1');
+  await waitForEditorLoad(page);
+  await clickNewPageButton(page);
+  await waitForEditorLoad(page);
+  const title = getBlockSuiteEditorTitle(page);
+  await title.pressSequentially('page1');
   await page.keyboard.press('Enter');
   expect(await title.innerText()).toBe('page1');
-  await newPage(page);
-  await waitEditorLoad(page);
-  const title2 = await getBlockSuiteEditorTitle(page);
-  await title2.type('page2');
+  await clickNewPageButton(page);
+  await waitForEditorLoad(page);
+  const title2 = getBlockSuiteEditorTitle(page);
+  await title2.pressSequentially('page2');
   await page.keyboard.press('Enter');
   expect(await title2.innerText()).toBe('page2');
   await page.keyboard.press('@', { delay: 50 });
